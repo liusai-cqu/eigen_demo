@@ -1,0 +1,13 @@
+# 编译算法实现和 DPI 包装器为共享库 libgauss.so
+g++ -O2 -fPIC -shared \
+    gaussian_elimination.cpp \
+    gaussian_dpi.cpp \
+    -I/usr/include/eigen3 \
+    -o libgauss.so
+# 编译 SystemVerilog 代码，并链接 libgauss.so
+vcs tb_gauss.sv \
+    -CFLAGS "-I/usr/include/eigen3" \
+    -LDFLAGS "-L. -lgauss" \
+    -o simv
+# 指定动态库后缀并运行
+./simv +libext+.so
