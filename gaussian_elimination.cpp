@@ -3,30 +3,25 @@
 #include <iostream>
 using namespace Eigen;
 
-VectorXd gaussianElimination(
-    const MatrixXd& A,
-    const VectorXd& b
+//Matrix<float,4,4> transformFunction(
+//    const Matrix<float,3,1>& b
+//) {
+//    // 初始化为单位矩阵
+//    Matrix<float,4,4> M = Matrix<float,4,4>::Identity();
+//
+//    // 将输入向量 b 复制到 M 的右侧最后一列的前 3 行
+//    M.template block<3,1>(0,3) = b;
+//
+//    return M;
+//}
+
+Matrix<float,4,4> transformFunction(
+    const Matrix<float,4,4>& M_in
 ) {
-    const Index n = A.rows();
-    MatrixXd aug(n, n+1);
-    aug << A, b;
-    for (Index k = 0; k < n; ++k) {
-        if (aug(k,k) == 0) {
-            std::cerr << "Zero pivot!" << std::endl;
-            exit(EXIT_FAILURE);
-        }
-        for (Index i = k+1; i < n; ++i) {
-            double f = aug(i,k)/aug(k,k);
-            for (Index j = k; j <= n; ++j)
-                aug(i,j) -= f*aug(k,j);
-        }
+    // 示例实现：对角元素加 1，其余保持不变
+    Matrix<float,4,4> M_out = M_in;
+    for (int i = 0; i < 4; ++i) {
+        M_out(i,i) += 1.0f;
     }
-    VectorXd x(n);
-    for (Index i = n-1; i >= 0; --i) {
-        x(i) = aug(i,n);
-        for (Index j = i+1; j < n; ++j)
-            x(i) -= aug(i,j)*x(j);
-        x(i) /= aug(i,i);
-    }
-    return x;
+    return M_out;
 }
